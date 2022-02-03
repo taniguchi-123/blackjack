@@ -1,0 +1,109 @@
+{# レイアウトを継承する #}
+{% extends "layout.html" %}
+              
+              
+{# タイトルのブロックを置き換える #}
+{% block title %}
+
+{% endblock %}
+              
+
+{# コンテンツのブロックを置き換える #}
+{% block contents %}
+
+    <div class="upper-side">
+        <h2 class="title">Welcome to Black Jack</h2>
+        <!-- ディーラーのカード表示-->
+            <div class="dealer-table">
+                <span class="box-title">dealer</span>    
+                {% if data %}
+                    {% for i in range(5) %}
+                         <img src="{{ card_display[5][i] }}">
+                    {% endfor %}    
+                {% endif %}
+                {% if sum_2 %} 
+                        <p>{{ sum_2[5] }}</p>
+                {% endif %}
+            </div> 
+    </div>    
+    <div class="clear"></div>
+
+    <!-- プレーヤーのカード表示-->
+    {% if data %}
+        <div class="player-table">
+            {% for k in range(5) %}
+                <div class="parent">
+                    {% for i in range(5) %}
+                         <div class="{{ children[i] }}"> 
+                             <img src="{{ card_display[k][i] }}">
+                        </div>
+                    {% endfor %}
+                    {% if sum_2 %} 
+                        <div class="children_point"> 
+                            <p>{{ sum_2[k] }}</p>    
+                        </div>
+                    {% endif %}
+                    <div class="children_text"> 
+                     <p>ポジション{{ k+1 }}</p>
+                    </div>
+                 </div>     
+            {% endfor %}
+        </div>    
+        <div class="clear"></div>
+    {% else %}
+        <div class="player-table">
+                    {% for i in range(5) %}
+                        <div class="parent">
+                             <div class="{{ children[i] }}"> 
+                                </div>
+                        </div>
+                    {% endfor %}
+        </div>    
+    {% endif %}
+    <div class="clear"></div>    
+    <div class="head">
+        
+        <div class="head-left">
+            {% if mode == 'auto_operation'  %}
+                <form action="/gamestart" method="post">
+                    <input class="start_button" type="submit" value="game start">
+                </form>
+            {% endif  %}
+            {% if mode == 'select_position'  %}
+                <form action="/play_step2" method="post">
+                        <p>プレイするポジションを選択して「continue」を押す：
+                            <input class="radio-inline__input" type="radio" name="position" value="1"  id="item-1" required ><label class="radio-inline__label" for="item-1">1</label>
+                            <input class="radio-inline__input" type="radio" name="position" value="2"  id="item-2" >
+                            <label class="radio-inline__label" for="item-2">2</label>
+                            <input class="radio-inline__input" type="radio" name="position" value="3"  id="item-3"><label class="radio-inline__label" for="item-3">3</label>
+                            <input class="radio-inline__input" type="radio" name="position" value="4"  id="item-4" >
+                            <label class="radio-inline__label" for="item-4">4</label>
+                            <input class="radio-inline__input" type="radio" name="position" value="5"  id="item-5" >
+                            <label class="radio-inline__label" for="item-5">5</label>
+                            <input class="start_button" type="submit" value="continue">
+                        </p>
+                </form>
+            {% endif  %}
+        </div>
+        <div class="head-right">
+            {% if mode == 'player_operation' %}
+                <form action="/play_step3" method="post">
+                    <input class="radio-inline__input" type="radio" name="player_select" value="1"  id="item-a" required >
+                        <label class="radio-inline__label" for="item-a">もう1枚カードをもらう</label>
+                    <input class="radio-inline__input" type="radio" name="player_select" value="2"  id="item-b" required >
+                        <label class="radio-inline__label" for="item-b">そのままにする</label>
+                    <input class="start_button" type="submit" value="決定">
+                </form>
+            {% endif  %}
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="result">
+        {% if mode == 'player_operation' %}
+            <p>プレーヤーポジション:  <font size='+1'>{{ player_position + 1}}</font></p>
+        {% endif  %}
+        {% if message %}
+            <p>message:  <font size='+1'>{{ message}}</font></p>
+        {% endif  %}
+    </div>
+{% endblock %}
